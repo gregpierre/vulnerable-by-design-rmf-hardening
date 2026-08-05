@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Welcome, {{ username }}</h2>
+
+  <form method="get" action="{{ url_for('search_tickets') }}">
+    <input name="q" placeholder="Search my tickets by title">
+    <button type="submit">Search</button>
+  </form>
+
+  <h3>New ticket</h3>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <p><input name="title" placeholder="Title" required></p>
+    <p><textarea name="description" placeholder="Describe the issue" required></textarea></p>
+    <button type="submit">Submit ticket</button>
+  </form>
+
+  <h3>My tickets</h3>
+  {% for ticket in tickets %}
+    <div class="ticket">
+      <strong>{{ ticket.title }}</strong> (status: {{ ticket.status }})<br>
+      {{ ticket.description }}
+    </div>
+  {% else %}
+    <p>No tickets yet.</p>
+  {% endfor %}
+{% endblock %}

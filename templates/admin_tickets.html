@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>All Tickets (admin)</h2>
+  {% for ticket in tickets %}
+    <div class="ticket">
+      <a href="{{ url_for('ticket_detail', ticket_id=ticket.id) }}">
+        #{{ ticket.id }} - {{ ticket.title }}
+      </a>
+      -- filed by {{ ticket.username }} (status: {{ ticket.status }})
+    </div>
+  {% else %}
+    <p>No tickets yet.</p>
+  {% endfor %}
+{% endblock %}
