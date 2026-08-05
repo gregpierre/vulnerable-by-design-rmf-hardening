@@ -1,27 +1,30 @@
 {% extends "base.html" %}
+{% block title %}dashboard{% endblock %}
 {% block content %}
-  <h2>Welcome, {{ username }}</h2>
+  <h2>welcome, {{ username }}</h2>
+  <p class="sub">submit a ticket or search the ones you've filed.</p>
 
-  <form method="get" action="{{ url_for('search_tickets') }}">
-    <input name="q" placeholder="Search my tickets by title">
-    <button type="submit">Search</button>
+  <form class="search" method="get" action="{{ url_for('search_tickets') }}">
+    <input name="q" placeholder="search my tickets by title">
+    <button type="submit">search</button>
   </form>
 
-  <h3>New ticket</h3>
+  <h3>new ticket</h3>
   <form method="post">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <p><input name="title" placeholder="Title" required></p>
-    <p><textarea name="description" placeholder="Describe the issue" required></textarea></p>
-    <button type="submit">Submit ticket</button>
+    <input name="title" placeholder="title" required>
+    <textarea name="description" placeholder="describe the issue" required></textarea>
+    <button type="submit">submit ticket</button>
   </form>
 
-  <h3>My tickets</h3>
+  <h3>my tickets</h3>
   {% for ticket in tickets %}
-    <div class="ticket">
-      <strong>{{ ticket.title }}</strong> (status: {{ ticket.status }})<br>
-      {{ ticket.description }}
+    <div class="card">
+      <div class="title">{{ ticket.title }}</div>
+      <div class="body">{{ ticket.description }}</div>
+      <div class="meta"><span class="pill">{{ ticket.status }}</span></div>
     </div>
   {% else %}
-    <p>No tickets yet.</p>
+    <p class="empty">no tickets yet.</p>
   {% endfor %}
 {% endblock %}

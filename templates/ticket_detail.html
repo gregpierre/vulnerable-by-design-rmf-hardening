@@ -1,10 +1,16 @@
 {% extends "base.html" %}
+{% block title %}ticket #{{ ticket.id if ticket }}{% endblock %}
 {% block content %}
   {% if ticket %}
-    <h2>Ticket #{{ ticket.id }}: {{ ticket.title }}</h2>
-    <p>Status: {{ ticket.status }}</p>
-    <p>{{ ticket.description }}</p>
+    <h2>{{ ticket.title }}</h2>
+    <div class="meta">
+      <span class="pill">{{ ticket.status }}</span>
+      <span>#{{ ticket.id }}</span>
+    </div>
+    <div class="card" style="margin-top: 1.5rem;">
+      <div class="body">{{ ticket.description }}</div>
+    </div>
   {% else %}
-    <p>Ticket not found.</p>
+    <p class="empty">ticket not found.</p>
   {% endif %}
 {% endblock %}
