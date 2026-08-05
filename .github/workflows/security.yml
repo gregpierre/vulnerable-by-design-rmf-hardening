@@ -1,0 +1,43 @@
+name: Security scan
+
+# Stage (d) -- RA-5 (Vulnerability Monitoring & Scanning), SI-2 (Flaw
+# Remediation), SA-11 (Developer Testing & Evaluation), CA-7 (Continuous
+# Monitoring). Runs static analysis and dependency scanning on every push
+# and PR to main; a failing scan blocks the merge. See CI_CD_SECURITY.md
+# for the control rationale and the reasoning behind the suppressions below.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          # Matches the interpreter the app actually runs on locally (see
+          # CI_CD_SECURITY.md re: the two accepted-risk suppressions below,
+          # which are a Python-3.9-only constraint).
+          python-version: "3.9"
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Static analysis (bandit)
+        run: bandit -r . --exclude ./venv,./.git
+
+      - name: Dependency scan (pip-audit)
+        run: |
+          pip-audit -r requirements.txt \
+            --ignore-vuln PYSEC-2026-2132 \
+            --ignore-vuln PYSEC-2026-2270
+          # PYSEC-2026-2132 (click) and PYSEC-2026-2270 (python-dotenv):
+          # fixed versions require Python >=3.10. Accepted as a tracked
+          # risk pending the Python upgrade planned for stage (e)
+          # containerization. See CI_CD_SECURITY.md for the exploitability
+          # rationale. Any OTHER finding still fails this job.

@@ -1,0 +1,5 @@
+# Dev/CI-only tooling -- not part of the application runtime.
+# Stage (d): static analysis + dependency scanning (RA-5, SI-2, SA-11).
+-r requirements.txt
+bandit==1.7.9
+pip-audit==2.7.3
