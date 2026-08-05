@@ -52,4 +52,4 @@ both print a one-time admin password and force a password change on first login.
 
 ## why this exists
 
-i'm working toward security+ / cysa+ and a cyber security engineering role, and i didn't want another certificate that says i can define a control without ever having implemented one. this is the version of that skill i can actually show: found the vulnerabilities myself, fixed them myself, automated the check so i don't have to re-find them by hand next time, and documented the whole thing the way it'd need to be documented for someone else to trust it.
+i'm working toward aws aa/cysa+ and a cyber security engineering role, and i didn't want another certificate that says i can define a control without ever having implemented one. this is the version of that skill i can actually show: found the vulnerabilities myself, fixed them myself, automated the check so i don't have to re-find them by hand next time, and documented the whole thing the way it'd need to be documented for someone else to trust it.
