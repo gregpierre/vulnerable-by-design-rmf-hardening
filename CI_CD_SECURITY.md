@@ -33,22 +33,17 @@ Automates the checks that stages (b)/(c) did by hand: static analysis catches co
 
 **Action taken:** flask, werkzeug, jinja2, itsdangerous, and Flask-WTF were upgraded to their fixed versions (now `3.1.3` / `3.1.8` / `3.1.6` / `2.2.0` / `1.2.2` respectively) and re-verified against a running instance of the app — no regressions.
 
-## Accepted risk: click and python-dotenv on Python 3.9
+## Accepted risk: click and python-dotenv on Python 3.9 — RESOLVED at stage (e)
 
-`click`'s fix (8.3.3) and `python-dotenv`'s fix (1.2.2) both require Python ≥3.10. This machine runs macOS's bundled system Python 3.9.6, with no Homebrew/pyenv installed to get a newer interpreter — upgrading the interpreter itself is a machine-level change out of scope for this pass, deferred to stage (e) containerization (a Docker base image will pin a modern Python and close this automatically).
+`click`'s fix (8.3.3) and `python-dotenv`'s fix (1.2.2) both required Python ≥3.10. At the time this stage was done, the local dev Mac ran macOS's bundled system Python 3.9.6 with no Homebrew/pyenv installed, so both packages were pinned to their newest 3.9-compatible releases (`click==8.1.8`, `python-dotenv==1.2.1`) and the two remaining advisories (**PYSEC-2026-2132**, **PYSEC-2026-2270**) were suppressed in CI via `pip-audit --ignore-vuln`, with a documented low-exploitability rationale (click is CLI-only, python-dotenv only parses a local gitignored `.env` — neither touches untrusted input).
 
-Tracked as an accepted risk rather than silently ignored:
-
-- **PYSEC-2026-2132** (click 8.1.8, latest Python-3.9-compatible release) — click is a CLI-argument-parsing library. In this app it's a transitive dependency of Flask's `flask` CLI entrypoint, invoked at developer discretion on a local machine — it never parses attacker-supplied input from an HTTP request. Exploitability in this app's threat model is negligible.
-- **PYSEC-2026-2270** (python-dotenv 1.2.1, latest Python-3.9-compatible release) — parses `.env`, a file the developer controls locally and which is gitignored. It never parses untrusted input. Exploitability in this app's threat model is negligible.
-
-Both are pinned to their newest Python-3.9-compatible release (not left on the original, older, more-vulnerable pins) and explicitly suppressed in the CI gate via `pip-audit --ignore-vuln <ID>`, each with an inline comment pointing back to this document — a deliberate, reviewed exception, not a gap the scanner silently missed. Any *other* advisory still fails the build.
+Stage (e) containerized the app on `python:3.12.9-slim-bookworm`, which has no such ceiling. `requirements.txt` was bumped to the fully-patched versions (`click==8.3.3`, `python-dotenv==1.2.2`), and `pip-audit` re-run against the updated file — **0 findings, 0 suppressions needed.** The CI workflow's suppressions were removed and its Python version bumped to 3.12 to match. See `CONTAINER_SECURITY.md` for that verification. This entry is left in place, marked resolved, as the audit trail of the original risk-acceptance decision.
 
 ## Result
 
-| Tool | Before upgrade | After upgrade + documented suppressions |
-|---|---|---|
-| bandit | 0 findings | 0 findings |
-| pip-audit | 11 vulnerabilities / 5 packages | 0 unaccepted (2 suppressed, tracked above) |
+| Tool | Before upgrade | After upgrade (stage d) | After stage (e) |
+|---|---|---|---|
+| bandit | 0 findings | 0 findings | 0 findings |
+| pip-audit | 11 vulnerabilities / 5 packages | 0 unaccepted (2 suppressed) | 0 findings, 0 suppressions |
 
-**Next:** Stage (e) — containerize the app; the container's Python base image resolves the click/python-dotenv ceiling, closing this stage's one open item as a side effect.
+**Next:** Stage (f) — SSP-style writeup covering stages (a)-(e).

@@ -26,7 +26,7 @@ if not SECRET_KEY:
         "(generate one with: python -c \"import secrets; print(secrets.token_hex(32))\")."
     )
 
-DATABASE = "helpdesk.db"
+DATABASE = os.environ.get("DATABASE_PATH", "helpdesk.db")
 
 ADMIN_BOOTSTRAP_USERNAME = os.environ.get("ADMIN_BOOTSTRAP_USERNAME", "admin")
 ADMIN_BOOTSTRAP_PASSWORD = os.environ.get("ADMIN_BOOTSTRAP_PASSWORD")  # None -> init_db.py generates one
@@ -37,7 +37,7 @@ FLASK_PORT = int(os.environ.get("FLASK_PORT", "5000"))
 
 SESSION_COOKIE_SECURE = _env_bool("SESSION_COOKIE_SECURE", default=False)
 
-LOG_FILE = "security.log"
+LOG_FILE = os.environ.get("LOG_FILE_PATH", "security.log")
 
 LOGIN_MAX_ATTEMPTS = 5
 LOGIN_LOCKOUT_SECONDS = 15 * 60
