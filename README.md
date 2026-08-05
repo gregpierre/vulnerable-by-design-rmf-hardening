@@ -2,7 +2,7 @@
 
 so i built a helpdesk ticket tracker (flask + sqlite) and made it vulnerable. on purpose.
 
-why would i do that? because i wanted to practice the actual job i'm training for — not just read about it. so i sat down and asked: if i build something insecure the way a rushed junior dev actually would, how many real vulnerabilities can i find in it? then: can i fix every one of them and explain *why* the fix is correct, not just that it "works"? then: can i stop relying on my own memory to catch this stuff again and make a machine catch it instead? then: can i package the fixed app so it ships safely? and finally: can i write all of that up the way a real security team would, as a document someone could actually hand to a decision-maker?
+why would i do that? because i wanted to practice the actual job i'm training for, not just read about it. so i sat down and asked: if i build something insecure the way a rushed junior dev actually would, how many real vulnerabilities can i find in it? then: can i fix every one of them and explain *why* the fix is correct, not just that it "works"? then: can i stop relying on my own memory to catch this stuff again and make a machine catch it instead? then: can i package the fixed app so it ships safely? and finally: can i write all of that up the way a real security team would, as a document someone could actually hand to a decision maker?
 
 that's this repo. six stages, one app, full paper trail.
 
